@@ -2,10 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/kxnaylor/git/repos/TestAutomationFramework/libs/selenium-java-3.141.59/selenium-api-3.141.59.jar"/>
-	<classpathentry kind="lib" path="/home/kxnaylor/git/repos/TestAutomationFramework/libs/selenium-java-3.141.59/selenium-chrome-driver-3.141.59.jar"/>
-	<classpathentry kind="lib" path="/home/kxnaylor/git/repos/TestAutomationFramework/libs/selenium-java-3.141.59/selenium-firefox-driver-3.141.59.jar"/>
-	<classpathentry kind="lib" path="/home/kxnaylor/git/repos/TestAutomationFramework/libs/selenium-java-3.141.59/selenium-remote-driver-3.141.59.jar"/>
-	<classpathentry kind="lib" path="/home/kxnaylor/git/repos/TestAutomationFramework/libs/selenium-java-3.141.59/selenium-support-3.141.59.jar"/>
+	<classpathentry kind="lib" path="lib/client-combined-3.141.59.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-server-standalone-3.141.59.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.10.jar" sourcepath="lib/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-chrome-driver-3.141.59.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-firefox-driver-3.141.59.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-java-3.141.59.jar"/>
+	<classpathentry kind="lib" path="lib/selenium-support-3.141.59.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,10 +1,18 @@
 package pages;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.openqa.selenium.By;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.apache.commons.exec.util.StringUtils;
+import org.openqa.selenium.*;
 
-
+import dataProvider.ConfigReader;
 
 public class LoginPage {
 	
@@ -14,21 +22,31 @@ public class LoginPage {
 	  
 	  By passWord = By.id("inputPassword");
 	  
-	  By signIn = By.className("btn btn-lg btn-primary btn-block");
+	  By signIn = By.cssSelector(".btn.btn-lg.btn-primary.btn-block");
+	  
+	  By alert = By.id("alert");
+	  
+	  ConfigReader reader = new ConfigReader();
+	  
+	  String strUserName = reader.getUserName();
+		
+	  String strPassword = reader.getPassword();
+	  
+	  String strExpectedValidation = "Please fill out this field.";
 	  
 	  public LoginPage(WebDriver driver){
 		  
 		  this.driver = driver;
 	  }
 	  
-	  public void setUserName(CharSequence[] strUserName){
+	  public void setUserName(String strUserName){
 		  
-		  driver.findElement(userName).sendKeys(strUserName);
+		 this.driver.findElement(userName).sendKeys(strUserName);
 	  }
 	  
-	  public void setPassword(CharSequence[] strPassword){
+	  public void setPassword(String strPassword){
 		  
-		  driver.findElement(userName).sendKeys(strPassword);
+		  driver.findElement(passWord).sendKeys(strPassword);
 	  }
 
 	  public void clickLogin(){
@@ -37,7 +55,49 @@ public class LoginPage {
 		  
 	  }
 	  
-	  public void loginIntoPage(CharSequence[]  strUserName, CharSequence[]  strPassword){
+		public String getIncorrectAlert(){
+			
+			return driver.findElement(alert).getText();
+
+		}
+	  
+	  public void loginIntoPage(){
+		  		  		  		  
+		  this.setUserName(strUserName);
+		  
+		  this.setPassword(strPassword);
+		  
+		  this.clickLogin();
+		  
+	  }
+	  
+	  public boolean loginNoUserName(){
+				  		  
+		  String strValidateMessage 
+		  = driver.findElement(userName).getAttribute("validationMessage");
+		  	  	  			  
+		  this.setPassword(strPassword);
+		  
+		  this.clickLogin();
+		  
+		  return (strValidateMessage.equals(strExpectedValidation));
+		  	  
+	  }
+	  
+	  public boolean loginNoPassword(){
+		  	  
+		  String strValidateMessage 
+		  = driver.findElement(passWord).getAttribute("validationMessage");
+		  		  			  		  
+		  this.setUserName(strUserName);
+		  		  
+		  this.clickLogin();
+		  
+		  return (strValidateMessage.equals(strExpectedValidation));
+		  
+	  }
+  
+	  public void loginWrongUserName(String strUserName){
 		  
 		  this.setUserName(strUserName);
 		  
@@ -47,4 +107,24 @@ public class LoginPage {
 		  
 	  }
 	  
+	  public void loginWrongPassword(String strPassword){
+		  
+		  this.setUserName(strUserName);
+		  
+		  this.setPassword(strPassword);
+		  
+		  this.clickLogin();
+		  
+	  }
+	  
+	  public boolean isExpectedAlert(){
+			
+			String strPageTitle =  getIncorrectAlert();
+			
+			String strExpectedPageTitle = reader.getLoginAlert();
+			
+			return new String(strPageTitle).equals(strExpectedPageTitle);
+
+		}
+	    	  
 }

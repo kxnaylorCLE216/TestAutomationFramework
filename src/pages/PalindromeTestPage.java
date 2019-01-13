@@ -4,7 +4,7 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
-import testUtility.readConfig;
+import dataProvider.ConfigReader;
 
 public class PalindromeTestPage {
 
@@ -70,13 +70,13 @@ public class PalindromeTestPage {
 	
 	public boolean isExpectedPageTitle(){
 		
-		readConfig file = new readConfig();
+		ConfigReader reader = new ConfigReader();
+				
+		String strPageTitle =  getPageTitle();
 		
-		String strPageTitle = getPageTitle();
+		String strExpectedPageTitle = reader.getExPageTitle();
 		
-		String strExpectedPageTitle = file.getExPageTitle();
-		
-		return (strPageTitle == strExpectedPageTitle);
+		return new String(strPageTitle).equals(strExpectedPageTitle);
 
 	}
 	

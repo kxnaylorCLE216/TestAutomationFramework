@@ -1,18 +1,12 @@
 package pages;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import org.openqa.selenium.By;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.apache.commons.exec.util.StringUtils;
-import org.openqa.selenium.*;
 
-import dataProvider.ConfigReader;
+import data.provider.ConfigReader;
+import test.utility.CommonLib;
 
 public class LoginPage {
 	
@@ -34,6 +28,8 @@ public class LoginPage {
 	  
 	  String strExpectedValidation = "Please fill out this field.";
 	  
+	  CommonLib common = new CommonLib();
+	  
 	  public LoginPage(WebDriver driver){
 		  
 		  this.driver = driver;
@@ -41,21 +37,29 @@ public class LoginPage {
 	  
 	  public void setUserName(String strUserName){
 		  
+		  common.waitForClickableElement(this.driver, userName);
+		  
 		 this.driver.findElement(userName).sendKeys(strUserName);
 	  }
 	  
 	  public void setPassword(String strPassword){
+		  
+		  common.waitForClickableElement(this.driver, passWord);
 		  
 		  driver.findElement(passWord).sendKeys(strPassword);
 	  }
 
 	  public void clickLogin(){
 		  
+		  common.waitForClickableElement(this.driver, signIn);
+		  
 		  driver.findElement(signIn).click();
 		  
 	  }
 	  
 		public String getIncorrectAlert(){
+			
+			common.waitForClickableElement(this.driver, alert);
 			
 			return driver.findElement(alert).getText();
 
@@ -71,8 +75,27 @@ public class LoginPage {
 		  
 	  }
 	  
+	  public void loginIntoPage(String strUserName, String strPassword){
+	  		  
+		  this.setUserName(strUserName);
+		  
+		  this.setPassword(strPassword);
+		  
+		  this.clickLogin();
+		  
+	  }
+	  
+	  public void backToLogin() {
+		   			
+			String strURL = reader.getURL();
+					
+			driver.navigate().to(strURL);
+	  }
+	  
 	  public boolean loginNoUserName(){
-				  		  
+		  
+		  common.waitForClickableElement(this.driver, userName);
+			 		  
 		  String strValidateMessage 
 		  = driver.findElement(userName).getAttribute("validationMessage");
 		  	  	  			  
@@ -96,35 +119,14 @@ public class LoginPage {
 		  return (strValidateMessage.equals(strExpectedValidation));
 		  
 	  }
-  
-	  public void loginWrongUserName(String strUserName){
-		  
-		  this.setUserName(strUserName);
-		  
-		  this.setPassword(strPassword);
-		  
-		  this.clickLogin();
-		  
-	  }
-	  
-	  public void loginWrongPassword(String strPassword){
-		  
-		  this.setUserName(strUserName);
-		  
-		  this.setPassword(strPassword);
-		  
-		  this.clickLogin();
-		  
-	  }
-	  
+  	  
 	  public boolean isExpectedAlert(){
 			
 			String strPageTitle =  getIncorrectAlert();
 			
 			String strExpectedPageTitle = reader.getLoginAlert();
-			
-			return new String(strPageTitle).equals(strExpectedPageTitle);
+							
+			return (strPageTitle.equals(strExpectedPageTitle));
 
 		}
-	    	  
 }

@@ -1,61 +1,43 @@
 package pages;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-import dataProvider.ConfigReader;
+import data.provider.ConfigReader;
+import test.utility.CommonLib;
+
 
 public class PalindromeTestPage {
 
 	WebDriver driver;
 	
+	CommonLib common = new CommonLib();
+	
+	ConfigReader reader = new ConfigReader();
+	
 	By pageTitle = By.className("navbar-brand");
 	
-	By radio1label = By.id("radio1label");
+	RadioLabels radioLabels = new RadioLabels();
 	
-	By radio2label = By.id("radio2label");
+	InputLabels inputLabels = new InputLabels();
 	
-	By radio3label = By.id("radio3label");
-	
-	By radio4label = By.id("radio4label");
-	
-	By radio5label = By.id("radio5label");
-	
-	By radio6label = By.id("radio6label");
-	 
-	By radio7label = By.id("radio7label");
-	
-	By input1label = By.id("input1label");
-	
-	By input2label = By.id("input2label");
-	
-	By input3label = By.id("input3label");
-	
-	By input4label = By.id("input4label");
-	
-	By input5label = By.id("input5label");
-	
-	By input6label = By.id("input6label");
-	
-	By check1label = By.id("check1label");
-	
-	By check2label = By.id("check2label");
-	
-	By check3label = By.id("check3label");
-	
-	By check4label = By.id("check4label");
-	
-	By check5label = By.id("check5label");
-	
-	By check6label = By.id("check6label");
+	CheckBoxLabels checkBoxLabels = new CheckBoxLabels();
 	
 	By dropDown = By.id("select");
 	
 	By table = By.id("table-body");
 	
-	By moreButton = By.className("btn btn-secondary btn-lg btn-block");
+	By moreButton = By.cssSelector(".btn.btn-secondary.btn-lg.btn-block");
 	
+	List<String> hiddenValues = new ArrayList<>();
+	
+	List<String> allTextBoxValues = new ArrayList<>();
+		
 	public PalindromeTestPage(WebDriver driver){
 		
 		this.driver = driver;
@@ -64,19 +46,31 @@ public class PalindromeTestPage {
 	
 	public String getPageTitle(){
 		
+		common.waitForClickableElement(this.driver, pageTitle);
+		
 		return driver.findElement(pageTitle).getText();
 
 	}
 	
+	public String getElementValue(By element){
+		
+		return driver.findElement(element).getText();
+
+	}
+	
 	public boolean isExpectedPageTitle(){
-		
-		ConfigReader reader = new ConfigReader();
-				
-		String strPageTitle =  getPageTitle();
-		
+								
 		String strExpectedPageTitle = reader.getExPageTitle();
 		
-		return new String(strPageTitle).equals(strExpectedPageTitle);
+		boolean isTitleEqual = false;
+		
+		String strPageTitle =  getPageTitle();
+		
+		if (strPageTitle.equals(strExpectedPageTitle)) {
+			isTitleEqual = true;
+		}
+		
+		return isTitleEqual;
 
 	}
 	
@@ -87,7 +81,7 @@ public class PalindromeTestPage {
 		selectDropDown.selectByValue(strSelection);
 	}
 	
-	public List getDropDownOptions(){
+	public List<WebElement> getDropDownOptions(){
 		
 		Select selectDropDown = new Select(driver.findElement(dropDown));
 		
@@ -100,4 +94,134 @@ public class PalindromeTestPage {
 		  
 	}
 	
+	public List<String> getAllPalindromes() {
+						
+		List<String> lstPalindromes = new ArrayList<>();
+		
+		List<String> allRowValues = new ArrayList<>();
+				
+		List<String> allAlertValues = new ArrayList<>();
+					
+		allRowValues.addAll(getAllVisableRowsValues());
+				
+		allTextBoxValues.addAll(getTextBoxValues());
+		 
+		allAlertValues.addAll(getAlertValues()); 
+		
+		lstPalindromes.addAll(allRowValues);
+		
+		lstPalindromes.addAll(allTextBoxValues);	
+		
+		lstPalindromes.addAll(allAlertValues);	
+		
+		return lstPalindromes;
+	}
+	
+	private List<String> getTextBoxValues(){
+				
+		 List<WebElement> elements = driver.findElements(By.tagName("input"));
+				 
+		 elements.forEach(element -> {
+			 
+			 String strTemp = element.getAttribute("value");
+			 
+			 if (!strTemp.equals("on") && (common.isPalindrome(strTemp))) {
+				 allTextBoxValues.add(strTemp);	 
+			 }
+			 
+		 });		 
+		 
+		 return allTextBoxValues;
+		 		 		
+	}
+	
+	private List<String> getAlertValues(){
+		
+		clickMoreButton();
+				
+		List<String> alertPalindromes = new ArrayList<>();
+		
+		Alert alert = driver.switchTo().alert();
+		
+		String strAlertText =  alert.getText(); 
+		
+		alert.accept();
+				
+		List<String> alertValues = Arrays.asList(strAlertText.split("\\s+"));
+		
+		alertValues.forEach(alertMsg -> {
+			 if (common.isPalindrome(alertMsg)) {
+				 alertPalindromes.add(alertMsg);	 
+			 }
+			}
+		);
+				 	
+		 return alertPalindromes;
+		
+	}
+	
+	public boolean isMorePalindromesButton() {
+		
+		List<String> alertValues = new ArrayList<>();
+		
+		alertValues.addAll(getAlertValues());
+		
+		boolean isAlertNotEmpty = false;
+		
+		isAlertNotEmpty = (!alertValues.isEmpty());
+		
+		return isAlertNotEmpty;
+		
+	}
+	
+	private List<String> getHiddenRowValues(){
+			 
+		List<WebElement> hiddenElements 
+				= driver.findElements(By.cssSelector(".sr-only"));
+		 		 		 
+		 hiddenElements.forEach(webElement -> 
+		 hiddenValues.add(webElement.getText()));
+		 
+		 hiddenValues.remove(0);
+		 
+		 return hiddenValues;
+	}
+	
+	private List<String> getAllVisableRowsValues() { 
+				
+		 hiddenValues = getHiddenRowValues();
+			 		 
+		 List<WebElement> elements = driver.findElements(By.className("row"));
+		 
+		 List <String> elementValues = new ArrayList<>();
+		 		 
+		 elements.forEach(webElement -> {
+				 
+			 List<String> lstTemp = new ArrayList<>();
+			 
+			 String strCurrText = webElement.getText().trim();
+			 
+			 if (strCurrText.contains(" ")) {
+				 lstTemp = Arrays.asList(webElement.getText().split("\\s+"));
+			 }
+			 else
+			 {
+				 lstTemp = Arrays.asList(webElement.getText().split("\\r?\\n"));
+			 }
+			 			 			  			 
+			 if(!lstTemp.equals(hiddenValues))
+							
+				 lstTemp.forEach(temp -> {
+					 
+					 if (common.isPalindrome(temp)){
+						 elementValues.add(temp.trim());	 
+					 }
+				 });
+								
+				});
+		 		 			 		 		 
+		return elementValues; 
+		 		  
+	}
+		
 }

@@ -1,41 +1,62 @@
-package dataProvider;
+package data.provider;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ConfigReader {
 	
 	private Properties properties;
 	
-	 private final String propertyFilePath= "config/automationConfigs.properties";
+	Logger logger = Logger.getLogger(ConfigReader.class.getName());
+	
+	public static final String PROPFILEPATH = "config/automationConfigs.properties";
 	 
 	 public ConfigReader(){
 		 
 		 BufferedReader reader;
+		 
+		 FileReader filereader;
 	 
 		 try {
 			 
-			 reader = new BufferedReader(new FileReader(propertyFilePath));
+			 filereader = new FileReader(PROPFILEPATH);
+			 
+			 reader = new BufferedReader(filereader);
+			 
 			 properties = new Properties();
 	 
-			 try {
-			
-				 properties.load(reader);
-				 reader.close();
-			 
-			 } catch (IOException e) {
-				 e.printStackTrace();
-			 }
+			 loadProperties(reader);
 		 	
 		 	} catch (FileNotFoundException e) {
-			 e.printStackTrace();
-			 throw new RuntimeException("automationConfigs.properties file was not found at " + propertyFilePath);
+					 
+			 String message = ("automationConfigs.properties file was not found at " 
+			 + PROPFILEPATH);
+				
+			 logger.log(Level.SEVERE, message, e);
 				 
 		 } 
+	 }
+	 
+	 public void loadProperties(BufferedReader reader) {
+		 
+		 try {
+				
+			 properties.load(reader);
+			 reader.close();
+		 
+		 } catch (IOException e) {
+			 
+			 String message = ("automationConfigs.properties could not load properties" 
+					 + PROPFILEPATH);
+						
+			logger.log(Level.SEVERE, message, e);
+		 }
 	 }
 	 
 	 public String getExPageTitle(){
@@ -53,6 +74,12 @@ public class ConfigReader {
 	 public String getBrowserType(){
 		 String strBrowserType = properties.getProperty("browserType");
 		 if(strBrowserType!= null) return strBrowserType;
+		 else throw new RuntimeException("BrowserType not specified in the Configuration.properties file."); 
+		 }
+	 
+	 public String getIsHeadLess(){
+		 String strIsHeadLess = properties.getProperty("isHeadLess");
+		 if(strIsHeadLess!= null) return strIsHeadLess;
 		 else throw new RuntimeException("BrowserType not specified in the Configuration.properties file."); 
 		 }
 	 
@@ -79,6 +106,5 @@ public class ConfigReader {
 		 if(strLoginAlert!= null) return strLoginAlert;
 		 else throw new RuntimeException("LoginAlert not specified in the Configuration.properties file."); 
 		 }
-
 	 
 }

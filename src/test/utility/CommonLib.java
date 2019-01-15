@@ -43,5 +43,4 @@ public class CommonLib  {
 		  wait.until(ExpectedConditions.elementToBeClickable(element));
 	}
 
-}
- 
+} 

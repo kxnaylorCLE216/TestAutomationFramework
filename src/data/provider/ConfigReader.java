@@ -18,29 +18,32 @@ public class ConfigReader {
 	public static final String PROPFILEPATH = "config/automationConfigs.properties";
 	 
 	 public ConfigReader(){
-		 
-		 BufferedReader reader;
-		 
-		 FileReader filereader;
-	 
-		 try {
-			 
-			 filereader = new FileReader(PROPFILEPATH);
-			 
-			 reader = new BufferedReader(filereader);
+		   			 
+			 BufferedReader reader = getBufferedReader(PROPFILEPATH);
 			 
 			 properties = new Properties();
 	 
 			 loadProperties(reader);
-		 	
-		 	} catch (FileNotFoundException e) {
-					 
-			 String message = ("automationConfigs.properties file was not found at " 
-			 + PROPFILEPATH);
-				
-			 logger.log(Level.SEVERE, message, e);
-				 
-		 } 
+		 		
+	 } 
+	 
+	 public BufferedReader getBufferedReader(String path) {
+		 
+		 FileReader filereader = null;
+		
+		 
+		 try {
+			 filereader = new FileReader(path);
+		} catch (FileNotFoundException e) {
+			
+			String message = ("automationConfigs.properties could not find" 
+					 + PROPFILEPATH);
+						
+			logger.log(Level.SEVERE, message, e);
+		}
+		 				 
+		 return new BufferedReader(filereader);
+		 
 	 }
 	 
 	 public void loadProperties(BufferedReader reader) {
@@ -60,51 +63,101 @@ public class ConfigReader {
 	 }
 	 
 	 public String getExPageTitle(){
+		 
 		 String strExpectedTitle = properties.getProperty("expectedPageTitle");
-		 if(strExpectedTitle!= null) return strExpectedTitle;
-		 else throw new RuntimeException("ExpectedTitle not specified in the Configuration.properties file."); 
+		 
+		 if(strExpectedTitle == null) {
+			 configReaderException("ExpectedTitle not specified in the Configuration.properties file."); 	 
 		 }
+		 
+		 return strExpectedTitle;
+		 
+	}
 	 
 	 public String getURL(){
+		 
 		 String strURL = properties.getProperty("URL");
-		 if(strURL!= null) return strURL;
-		 else throw new RuntimeException("URL not specified in the Configuration.properties file."); 
+		 
+		 if(strURL == null) {
+			 configReaderException("URL not specified in the Configuration.properties file."); 
 		 }
+		 
+		 return strURL;
+		 
+	}
 	 
 	 public String getBrowserType(){
+		 
 		 String strBrowserType = properties.getProperty("browserType");
-		 if(strBrowserType!= null) return strBrowserType;
-		 else throw new RuntimeException("BrowserType not specified in the Configuration.properties file."); 
+		 
+		 if(strBrowserType == null) {
+			 configReaderException("BrowserType not specified in the Configuration.properties file.");  
 		 }
+		  
+		 return strBrowserType;
+		 
+	}
 	 
 	 public String getIsHeadLess(){
+		 
 		 String strIsHeadLess = properties.getProperty("isHeadLess");
-		 if(strIsHeadLess!= null) return strIsHeadLess;
-		 else throw new RuntimeException("BrowserType not specified in the Configuration.properties file."); 
+		 
+		 if(strIsHeadLess == null) {
+			 configReaderException("BrowserType not specified in the Configuration.properties file."); 	 
 		 }
+		 		 
+		 return strIsHeadLess;
+		 
+	}
 	 
 	 public String getDriverPath(){
+		 
 		 String strDriverPath = properties.getProperty("driverPath");
-		 if(strDriverPath!= null) return strDriverPath;
-		 else throw new RuntimeException("DriverPath not specified in the Configuration.properties file."); 
+		 
+		 if(strDriverPath == null) {
+			 configReaderException("DriverPath not specified in the Configuration.properties file.");  
 		 }
+		 		 
+		 return strDriverPath;
+	}
 
 	 public String getUserName(){
+		 
 		 String strUserName = properties.getProperty("userName");
-		 if(strUserName!= null) return strUserName;
-		 else throw new RuntimeException("userName not specified in the Configuration.properties file."); 
+		 
+		 if(strUserName == null) { 
+			 configReaderException("userName not specified in the Configuration.properties file."); 
 		 }
+		 
+		 return strUserName;
+		 
+	}
 
 	 public String getPassword(){
+		 
 		 String strPassword = properties.getProperty("passWord");
-		 if(strPassword!= null) return strPassword;
-		 else throw new RuntimeException("passWord not specified in the Configuration.properties file."); 
+		 
+		 if(strPassword== null) {
+			configReaderException("passWord not specified in the Configuration.properties file.");
 		 }
+		 
+		 return strPassword;
+	 }
 	 
 	 public String getLoginAlert(){
+		 
 		 String strLoginAlert = properties.getProperty("LoginAlert");
-		 if(strLoginAlert!= null) return strLoginAlert;
-		 else throw new RuntimeException("LoginAlert not specified in the Configuration.properties file."); 
+		 
+		 if(strLoginAlert== null)  {
+			 configReaderException("LoginAlert not specified in the Configuration.properties file."); 
 		 }
+		 
+		 return strLoginAlert;
+	}
+	 
+	 private Exception configReaderException(String string) {
+		logger.log(Level.SEVERE, string);
+		return null;
+	}
 	 
 }

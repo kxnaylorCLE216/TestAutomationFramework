@@ -34,14 +34,14 @@ public class LoginPage {
 	  
 	  public void setUserName(String strUserName){
 		  
-		  common.waitForClickableElement(this.driver, userName);
+		  //common.waitForVisibility(this.driver, userName);
 		  
 		 this.driver.findElement(userName).sendKeys(strUserName);
 	  }
 	  
 	  public void setPassword(String strPassword){
 		  
-		  common.waitForClickableElement(this.driver, passWord);
+		  common.waitForVisibility(this.driver, passWord);
 		  
 		  driver.findElement(passWord).sendKeys(strPassword);
 	  }
@@ -91,7 +91,7 @@ public class LoginPage {
 	  
 	  public boolean loginNoUserName(){
 		  
-		  common.waitForClickableElement(this.driver, userName);
+		  common.waitForVisibility(this.driver, userName);
 			 		  
 		  String strValidateMessage 
 		  = driver.findElement(userName).getAttribute("validationMessage");

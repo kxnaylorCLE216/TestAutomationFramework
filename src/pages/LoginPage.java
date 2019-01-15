@@ -23,7 +23,7 @@ public class LoginPage {
 		
 	  String strPassword = reader.getPassword();
 	  
-	  String strExpectedValidation = "Please fill out this field.";
+	  String strExpectedValidation = reader.getExpectedFieldValidation();
 	  
 	  CommonLib common = new CommonLib();
 	  
@@ -34,7 +34,7 @@ public class LoginPage {
 	  
 	  public void setUserName(String strUserName){
 		  
-		  //common.waitForVisibility(this.driver, userName);
+		 common.waitForVisibility(this.driver, userName);
 		  
 		 this.driver.findElement(userName).sendKeys(strUserName);
 	  }

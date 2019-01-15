@@ -155,6 +155,17 @@ public class ConfigReader {
 		 return strLoginAlert;
 	}
 	 
+	 public String getExpectedFieldValidation(){
+		 
+		 String strExpectedFieldValidation = properties.getProperty("ExpectedFieldValidation");
+		 
+		 if(strExpectedFieldValidation== null)  {
+			 configReaderException("ExpectedFieldValidation not specified in the Configuration.properties file."); 
+		 }
+		 
+		 return strExpectedFieldValidation;
+	}
+	 
 	 private Exception configReaderException(String string) {
 		logger.log(Level.SEVERE, string);
 		return null;
